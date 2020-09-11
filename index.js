@@ -8,23 +8,32 @@ console.log('Connecting to ' + url + ' server');
 connect.then(() => {
     console.log('Connected correctly to server');
 
-    var newDish = Dishes({
-        name: 'Uthappizza4',
-        description: 'test4'
-    });
-
-    newDish.save()
+    Dishes.create({
+        name: 'Uthapizza',
+        description: 'Test'
+    })
         .then((dish) => {
-            console.log(dish);
+            //console.log('\n' + dish);
 
-            return Dishes.find({});
+            return Dishes.findByIdAndUpdate(dish._id, {
+                $set: { description: "Updated Test" }
+            }, {
+                new: true
+            })
         })
-        .then((dishes) => {
-            console.log(dishes);
+        .then((dish) => {
+            console.log("\n" + dish);
 
-            return  .remove({});
+            dish.comment.push({
+                rating: 5,
+                comment: 'I\'m getting a sinking feeling!',
+                author: 'Leonardo di Carpaccio'
+            });
+
+            return dish.save();
         })
-        .then(() => {
+        .then((dish) => {
+            console.log("\n " + dish);
             return mongoose.connection.close();
         })
         .catch((err) => {
